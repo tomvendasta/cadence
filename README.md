@@ -11,6 +11,7 @@ Check out the article for a detailed walk-through of this repository.
 ### Run go apps directly
 
 `go run ./app/worker/main.go`
+
 `go run ./app/httpserver/main.go`
 
 ## Worker and API Server
