@@ -8,6 +8,11 @@ Check out the article for a detailed walk-through of this repository.
 2. `docker-compose up`
 3. Register the `simple-domain` with `docker run --network=host --rm ubercadence/cli:master --do simple-domain domain register --rd 10`
 
+### Run go apps directly
+
+`go run ./app/worker/main.go`
+`go run ./app/httpserver/main.go`
+
 ## Worker and API Server
 
 Navigate back to the project root folder. Make sure go is installed in system.
