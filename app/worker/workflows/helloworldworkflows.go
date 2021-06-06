@@ -2,6 +2,7 @@ package workflows
 
 import (
 	"context"
+	"fmt"
 	"go.uber.org/cadence/activity"
 	"go.uber.org/cadence/workflow"
 	"go.uber.org/zap"
@@ -47,29 +48,29 @@ func Workflow(ctx workflow.Context, name string) (string, error) {
 		return "", err
 	}
 
-	return name, nil
-	// // After saying hello, the workflow will wait for you to inform it of your age!
-	// signalName := SignalName
-	// selector := workflow.NewSelector(ctx)
-	// var ageResult int
-	//
-	// for {
-	// 	signalChan := workflow.GetSignalChannel(ctx, signalName)
-	// 	selector.AddReceive(signalChan, func(c workflow.Channel, more bool) {
-	// 		c.Receive(ctx, &ageResult)
-	// 		workflow.GetLogger(ctx).Info("Received age results from signal!", zap.String("signal", signalName), zap.Int("value", ageResult))
-	// 	})
-	// 	workflow.GetLogger(ctx).Info("Waiting for signal on channel.. " + signalName)
-	// 	// Wait for signal
-	// 	selector.Select(ctx)
-	//
-	// 	// We can check the age and return an appropriate response
-	// 	if ageResult > 0 && ageResult < 150 {
-	// 		logger.Info("Workflow completed.", zap.String("NameResult", activityResult), zap.Int("AgeResult", ageResult))
-	//
-	// 		return fmt.Sprintf("Hello "+name+"! You are %v years old!", ageResult), nil
-	// 	} else {
-	// 		return "You can't be that old!", nil
-	// 	}
-	// }
+	//return name, nil
+	// After saying hello, the workflow will wait for you to inform it of your age!
+	signalName := SignalName
+	selector := workflow.NewSelector(ctx)
+	var ageResult int
+
+	for {
+		signalChan := workflow.GetSignalChannel(ctx, signalName)
+		selector.AddReceive(signalChan, func(c workflow.Channel, more bool) {
+			c.Receive(ctx, &ageResult)
+			workflow.GetLogger(ctx).Info("Received age results from signal!", zap.String("signal", signalName), zap.Int("value", ageResult))
+		})
+		workflow.GetLogger(ctx).Info("Waiting for signal on channel.. " + signalName)
+		// Wait for signal
+		selector.Select(ctx)
+
+		// We can check the age and return an appropriate response
+		if ageResult > 0 && ageResult < 150 {
+			logger.Info("Workflow completed.", zap.String("NameResult", activityResult), zap.Int("AgeResult", ageResult))
+
+			return fmt.Sprintf("Hello "+name+"! You are %v years old!", ageResult), nil
+		} else {
+			return "You can't be that old!", nil
+		}
+	}
 }
